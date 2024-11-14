@@ -7,22 +7,20 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-      show-sql: true
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-minio:
-  url: http://localhost:9000
-  access-key: minio-access-key
-  secret-key: minio-secret-key
-  bucket: object-storage-app
-
-  # DB migrations settings
+ # DB migrations settings
   liquibase:
     change-log: db/changelog/changelog.yaml
     contexts: main, test
     liquibase-schema: public
     user: postgres
     password: postgres
+minio:
+  url: http://localhost:9000
+  access-key: minio-access-key
+  secret-key: minio-secret-key
+  bucket: object-storage-app
