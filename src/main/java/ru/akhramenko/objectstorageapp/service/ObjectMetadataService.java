@@ -2,6 +2,7 @@ package ru.akhramenko.objectstorageapp.service;
 
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 import ru.akhramenko.objectstorageapp.entity.ObjectMetadata;
 import ru.akhramenko.objectstorageapp.repo.ObjectMetadataRepo;
+import ru.akhramenko.objectstorageapp.utils.exception.ResourceNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class ObjectMetadataService {
     @Autowired
     private final ObjectMetadataRepo objectMetadataRepo;
 
-    @Value("${minio.bucket}")
+    @Value("${minio.bucket-name}")
     private String bucketName;
 
     public ObjectMetadata saveFile(MultipartFile file, String description) throws Exception {
@@ -46,4 +48,16 @@ public class ObjectMetadataService {
     public List<ObjectMetadata> getAllFiles() {
         return objectMetadataRepo.findAll();
     }
+
+    public void deleteFile(UUID id) throws Exception {
+        ObjectMetadata metadata = objectMetadataRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+
+        minioClient.removeObject(RemoveObjectArgs.builder()
+                .bucket(bucketName)
+                .object(metadata.getFilename())
+                .build());
+
+        objectMetadataRepo.deleteById(metadata.getId());
+    }
+
 }

@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   datasource:
     url: jdbc:postgresql://localhost:5432/object_storage_app
     username: postgres
@@ -21,6 +25,6 @@ spring:
     password: postgres
 minio:
   url: http://localhost:9000
-  access-key: minio-access-key
-  secret-key: minio-secret-key
-  bucket: object-storage-app
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket-name: object-storage-app

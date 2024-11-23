@@ -3,7 +3,10 @@ package ru.akhramenko.objectstorageapp.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,7 +16,9 @@ import ru.akhramenko.objectstorageapp.entity.ObjectMetadata;
 import ru.akhramenko.objectstorageapp.service.ObjectMetadataService;
 
 import java.util.List;
+import java.util.UUID;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/objects")
@@ -36,5 +41,14 @@ public class ObjectMetadataController {
     @GetMapping("")
     public List<ObjectMetadata> getAllFiles() {
         return objectMetadataService.getAllFiles();
+    }
+
+    @DeleteMapping("/{id}")
+    public void removeFile(@PathVariable("id") UUID id) {
+        try {
+            objectMetadataService.deleteFile(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
